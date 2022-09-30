@@ -6,7 +6,7 @@ const QuestionSchema = new mongoose.Schema({
       required: true
     },
     options: {
-      type: [{ option: String, isCorrect: Boolean }],
+      type: [{ option: String, isCorrect: Boolean,_id:false}],
       required: true
     },
     category: {
