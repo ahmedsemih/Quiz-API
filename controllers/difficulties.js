@@ -17,7 +17,7 @@ exports.getAllDifficulties = async (req, res) => {
 
       if (difficulty === null) return notFound(res);
 
-      success(res, difficulty);
+      success(res, difficulty,"difficulty");
     } catch (error) {
       badRequest(res, error);
     }
@@ -27,7 +27,7 @@ exports.getAllDifficulties = async (req, res) => {
 
       if (difficulties === null) return notFound(res);
 
-      success(res, difficulties);
+      success(res, difficulties,"difficulties");
     } catch (error) {
       badRequest(res, error);
     }
@@ -41,7 +41,7 @@ exports.getDifficultyById = async (req, res) => {
 
     if (difficulty === null) return notFound(res);
 
-    success(res, difficulty);
+    success(res, difficulty,"difficulty");
   } catch (error) {
     badRequest(res, error);
   }
@@ -68,7 +68,7 @@ exports.updateDifficulty = async (req, res) => {
       new: true,
     });
 
-    success(res, updatedDifficulty);
+    success(res, updatedDifficulty,"updatedDifficulty");
   } catch (error) {
     badRequest(res, error);
   }
@@ -79,7 +79,7 @@ exports.deleteDifficulty = async (req, res) => {
     const { id } = await req.params;
     const deletedDifficulty = await Difficulty.findByIdAndDelete(id);
 
-    success(res, deletedDifficulty);
+    success(res, deletedDifficulty,"deletedDifficulty");
   } catch (error) {
     badRequest(res, error);
   }

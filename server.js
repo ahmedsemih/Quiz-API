@@ -6,6 +6,7 @@ require("dotenv").config();
 const categoryRoutes = require("./routes/categories");
 const difficultyRoutes = require("./routes/difficulties");
 const questionRoutes = require("./routes/questions");
+const rapidApiCheck = require('./middlewares/rapidApiCheck');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 4000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use((req,res,next)=>rapidApiCheck(req,res,next));
 
 // ROUTES
 app.use('/categories',categoryRoutes);

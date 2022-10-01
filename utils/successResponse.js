@@ -1,7 +1,7 @@
-module.exports = (res,data) => {
+module.exports = (res,data,dataName) => {
   return res.status(200).json({
-    data,
-    result_code: "200",
-    result_message: "success",
+    [dataName]:data,
+    "result_code": "200",
+    "result_message": "success",
   });
 };

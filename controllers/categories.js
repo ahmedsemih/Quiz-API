@@ -17,7 +17,7 @@ exports.getAllCategories = async (req, res) => {
 
       if (category === null) return notFound(res);
 
-      success(res, category);
+      success(res, category,"category");
     } catch (error) {
       badRequest(res, error);
     }
@@ -27,7 +27,7 @@ exports.getAllCategories = async (req, res) => {
 
       if (categories === null) return notFound(res);
 
-      success(res, categories);
+      success(res, categories,"categories");
     } catch (error) {
       badRequest(res, error);
     }
@@ -41,7 +41,7 @@ exports.getCategoryById = async (req, res) => {
 
     if (category === null) return notFound(res);
 
-    success(res, category);
+    success(res, category,"category");
   } catch (error) {
     badRequest(res, error);
   }
@@ -51,7 +51,7 @@ exports.addCategory = async (req, res) => {
   try {
     const newCategory = await Category.create(req.body);
 
-    res.status(200).json({
+    res.status(201).json({
       newCategory,
       result_code: "201",
       result_message: "success",
@@ -68,7 +68,7 @@ exports.updateCategory = async (req, res) => {
       new: true,
     });
 
-    success(res, updatedCategory);
+    success(res, updatedCategory,"updatedCategory");
   } catch (error) {
     badRequest(res, error);
   }
@@ -79,7 +79,7 @@ exports.deleteCategory = async (req, res) => {
     const { id } = await req.params;
     const deletedCategory = await Category.findByIdAndDelete(id);
 
-    success(res, deletedCategory);
+    success(res, deletedCategory,"deletedCategory");
   } catch (error) {
     badRequest(res, error);
   }
