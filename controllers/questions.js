@@ -34,14 +34,53 @@ exports.getQuestionById = async (req, res) => {
   }
 };
 
+exports.getQuestionsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const allQuestions = await Question.find({ category })
+      .populate("difficulty")
+      .populate("category");
+    const questionCount = await Question.find({ category }).count();
+    const questions = questionSelector(allQuestions, questionCount);
+
+    if (questions === null || questionCount === null) return notFound(res);
+
+    success(res, questions, "questions");
+  } catch (error) {
+    badRequest(res, error);
+  }
+};
+
+exports.getQuestionsByDifficulty = async (req, res) => {
+  try {
+    const { difficulty } = req.params;
+    const allQuestions = await Question.find({ difficulty })
+      .populate("difficulty")
+      .populate("category");
+    const questionCount = await Question.find({ difficulty }).count();
+    const questions = questionSelector(allQuestions, questionCount);
+
+    if (questions === null || questionCount === null) return notFound(res);
+
+    success(res, questions, "questions");
+  } catch (error) {
+    badRequest(res, error);
+  }
+};
+
 exports.getRandomQuestions = async (req, res) => {
-  var  {amount}  = await req.params || 20;
-  amount = amount > 100 ? 100 : amount;
+  const paths = req.path.split("/");
+  const amount = Number(paths[2]);
 
   try {
     const questionCount = await Question.count({});
     const randomNumber = await getRandomNumber(questionCount, amount + 100);
-    const selectedQuestions = await Question.find({}, null, { skip: randomNumber, limit: amount + 100 }).populate("difficulty").populate("category");;
+    const selectedQuestions = await Question.find({}, null, {
+      skip: randomNumber,
+      limit: amount + 100,
+    })
+      .populate("difficulty")
+      .populate("category");
     const questions = await questionSelector(selectedQuestions, amount);
 
     if (questions === null || questionCount === null) return notFound(res);
@@ -51,15 +90,16 @@ exports.getRandomQuestions = async (req, res) => {
   }
 };
 
-exports.getQuestionsByCategory = async (req, res) => {
+exports.getRandomQuestionsByCategory = async (req, res) => {
   const { category } = await req.params;
   if (!category) return badRequest(res);
 
   try {
     const questionCount = await Question.count({ category });
-    const randomNumber = await getRandomNumber(questionCount, 100);
-    const selectedQuestions = await Question.find({ category }, null, { skip: randomNumber, limit: 100 }).populate("difficulty").populate("category");;
-    const questions = await questionSelector(selectedQuestions, 50);
+    const selectedQuestions = await Question.find({ category })
+      .populate("difficulty")
+      .populate("category");
+    const questions = await questionSelector(selectedQuestions, 20);
 
     if (questions === null || questionCount === null) return notFound(res);
     success(res, questions, "questions");
@@ -68,15 +108,20 @@ exports.getQuestionsByCategory = async (req, res) => {
   }
 };
 
-exports.getQuestionsByDifficulty = async (req, res) => {
+exports.getRandomQuestionsByDifficulty = async (req, res) => {
   const { difficulty } = await req.params;
   if (!difficulty) return badRequest(res);
 
   try {
     const questionCount = await Question.count({ difficulty });
     const randomNumber = await getRandomNumber(questionCount, 100);
-    const selectedQuestions = await Question.find({ difficulty }, null, { skip: randomNumber, limit: 100 }).populate("difficulty").populate("category");;
-    const questions = await questionSelector(selectedQuestions, 50);
+    const selectedQuestions = await Question.find({ difficulty }, null, {
+      skip: randomNumber,
+      limit: 100,
+    })
+      .populate("difficulty")
+      .populate("category");
+    const questions = await questionSelector(selectedQuestions, 20);
 
     if (questions === null || questionCount === null) return notFound(res);
     success(res, questions, "questions");
@@ -121,6 +166,62 @@ exports.deleteQuestion = async (req, res) => {
   } catch (error) {
     badRequest(res, error);
   }
+};
+
+exports.getQuestionCountForCategory = async (req, res) => {
+  const sportCount = await Question.find({
+    category: "63357a4ec37e5b79f7f18979",
+  }).count();
+  const artCount = await Question.find({
+    category: "63357aa53ab81af9ad154eae",
+  }).count();
+  const geographyCount = await Question.find({
+    category: "63357abb3ab81af9ad154eb0",
+  }).count();
+  const generalCount = await Question.find({
+    category: "63357ad03ab81af9ad154eb2",
+  }).count();
+  const historyCount = await Question.find({
+    category: "63357adc3ab81af9ad154eb4",
+  }).count();
+  const musicCount = await Question.find({
+    category: "63357ae03ab81af9ad154eb6",
+  }).count();
+  const tvCount = await Question.find({
+    category: "63357af83ab81af9ad154eb8",
+  }).count();
+  const scienceCount = await Question.find({
+    category: "63357b0d3ab81af9ad154eba",
+  }).count();
+
+  res.json({
+    sportCount,
+    artCount,
+    geographyCount,
+    generalCount,
+    historyCount,
+    musicCount,
+    tvCount,
+    scienceCount,
+  });
+};
+
+exports.getQuestionCountForDifficulty = async (req, res) => {
+  const easyCount = await Question.find({
+    difficulty: "63343ba898b44503fecc49e9",
+  }).count();
+  const mediumCount = await Question.find({
+    difficulty: "63357b533ab81af9ad154ebe",
+  }).count();
+  const hardCount = await Question.find({
+    difficulty: "63357b5b3ab81af9ad154ec0",
+  }).count();
+
+  res.json({
+    easyCount,
+    mediumCount,
+    hardCount,
+  });
 };
 
 exports.badRequest = async (req, res) => {

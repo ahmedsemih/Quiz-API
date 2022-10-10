@@ -18,6 +18,34 @@ app.use(cors());
 app.use((req,res,next)=>rapidApiCheck(req,res,next));
 
 // ROUTES
+app.get('/',(req,res)=>{
+  res.status(200).json({
+    welcome:"Welcome to ASE's Quiz API",
+    endpoints:{
+      freeEndpoints:[
+        {endpoint:"/questions/random/20",job:"Get random 20 questions"},
+      ],
+      premiumEndpoints:[
+        {endpoint:"/questions/random/50",job:"Get random 50 questions"},
+        {endpoint:"/questions/random/category/{categoryId}",job:"Get random 20 questions by category"},
+        {endpoint:"/questions/random/difficulty/{difficultyId}",job:"Get random 20 questions by difficulty"},
+        {endpoint:"/categories",job:"Get all categories"},
+        {endpoint:"/difficulties",job:"Get all difficulties"}
+      ],
+      ultimateEndpoints:[
+        {endpoint:"/questions",job:"Get all questions (without pagination)"},
+        {endpoint:"/questions/{id}",job:"Get question by id"},
+        {endpoint:"/questions/category/{categoryId}",job:"Get questions by category"},
+        {endpoint:"/questions/difficulty/{difficultyId}",job:"Get questions by difficulty"},
+        {endpoint:"/questions/random/100}",job:"Get random 100 questions"},
+        {endpoint:"/questions/random/category/{categoryId}",job:"Get random 20 questions by category"},
+        {endpoint:"/questions/random/difficulty/{difficultyId",job:"Get random 20 questions by difficulty"},
+        {endpoint:"/categories",job:"Get all categories"},
+        {endpoint:"/difficulties",job:"Get all difficulties"}
+      ]
+    }
+  });
+});
 app.use('/categories',categoryRoutes);
 app.use('/difficulties',difficultyRoutes);
 app.use('/questions',questionRoutes);
